@@ -23,7 +23,8 @@ const service = axios.create({
 service.interceptors.request.use(async (config) => {
   // 判断vuex中是否有token
   if (store.state.user.token) {
-    // token过期
+    // token是否过期
+    // 如果token过期
     if (timeout()) {
       // 跳转到登录页
       await store.dispatch('user/logout')
