@@ -15,7 +15,27 @@ import router from './router'
 import '@/icons' // icon
 import '@/permission' // permission control
 
+// 导入所有的过滤器
+import * as filters from '@/filters'
+
+// 统一注册全局过滤器
+for (let k in filters) {
+  Vue.filter(k, filters[k])
+}
+
+// 导入所有的自定义指令
 import * as directives from './directives'
+
+// 统一注册全局自定义指令
+for (let k in directives) {
+  Vue.directive(k, directives[k])
+}
+
+// 导入所有的封装组件
+import components from '@/components'
+
+// 统一注册全局封装组件
+Vue.use(components)
 
 /**
  * If you don't want to use mock-server
@@ -29,10 +49,6 @@ import * as directives from './directives'
 if (process.env.NODE_ENV === 'production') {
   const { mockXHR } = require('../mock')
   mockXHR()
-}
-
-for (let k in directives) {
-  Vue.directive(k, directives[k])
 }
 
 // set ElementUI lang to EN

@@ -18,7 +18,7 @@
           <img
             :src="userInfo.staffPhoto"
             class="user-avatar"
-            v-imgError="defaultImg"
+            v-imgError="require('@/assets/common/head.jpg')"
           />
           <span>{{ userInfo.username }}</span>
           <i class="el-icon-caret-bottom" />
@@ -46,15 +46,12 @@
 import { mapGetters, createNamespacedHelpers } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-import errorImg from '@/assets/src=http___www.pp-sp.com_UploadFiles_img_2_164802939_3427154249_27.jpg&refer=http___www.pp-sp.webp'
 
 const { mapState: mapUserState } = createNamespacedHelpers('user')
 
 export default {
   data() {
-    return {
-      defaultImg: errorImg,
-    }
+    return {}
   },
   components: {
     Breadcrumb,
