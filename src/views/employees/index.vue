@@ -10,7 +10,9 @@
             @click="$router.push('/import')"
             >导入</el-button
           >
-          <el-button size="small" type="danger">导出</el-button>
+          <el-button size="small" type="danger" @click="exportExcel"
+            >导出</el-button
+          >
           <el-button size="small" type="primary" @click="showAdd"
             >新增员工</el-button
           >
@@ -62,7 +64,12 @@
           </el-table-column>
           <el-table-column label="操作" sortable="" fixed="right" width="280">
             <template slot-scope="{ row }">
-              <el-button type="text" size="small">查看</el-button>
+              <el-button
+                type="text"
+                size="small"
+                @click="$router.push(`/employees/detail/${row.id}`)"
+                >查看</el-button
+              >
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
@@ -100,6 +107,7 @@
 import { getEmployeesInfoApi, delEmployeeApi } from '@/api'
 import AddEmployees from './components/AddEmployees.vue'
 import employees from '@/constant/employees'
+const { exportExcelMapPath, hireType } = employees
 export default {
   name: 'employees',
   data() {
@@ -154,6 +162,40 @@ export default {
     // 点击新增员工显示弹出层
     showAdd() {
       this.addShow = true
+    },
+    // 导出功能
+    async exportExcel() {
+      const { export_json_to_excel } = await import('@/vendor/Export2Excel.js')
+      // 获取所有员工列表
+      const { rows } = await getEmployeesInfoApi({
+        page: '1',
+        size: this.total,
+      })
+      // 利用Object.keys把对象转换成数组
+      // 获取excel表头数据
+      const header = Object.keys(exportExcelMapPath)
+      // 获取excel表格内容数据
+      // 将数据处理成excel表格需要的数据
+      const data = rows.map((item) => {
+        // data数据格式是二维数组 需要根据表头数据处理 内容的数据
+        // item为data中的每一项 根据 路径映射表 中 header 的字段匹配数据
+        return header.map((h) => {
+          if (h === '聘用形式') {
+            const arr = hireType.find((hire) => {
+              return hire.id === item[exportExcelMapPath[h]]
+            })
+            return arr ? arr.value : '未知'
+          }
+          return item[exportExcelMapPath[h]]
+        })
+      })
+      export_json_to_excel({
+        header, //表头 必填
+        data, //具体数据 必填
+        filename: '员工列表', //非必填
+        autoWidth: true, //非必填
+        bookType: 'xlsx', //非必填
+      })
     },
   },
 }
