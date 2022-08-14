@@ -48,3 +48,16 @@ export const addEmployees = (data) => {
     data,
   })
 }
+
+/**
+ * 批量导入员工信息
+ * @param {Array} data 员工信息数组
+ * @returns promise
+ */
+export const importEmployees = (data) => {
+  return request({
+    method: 'POST',
+    url: '/sys/user/batch',
+    data,
+  })
+}
