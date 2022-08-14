@@ -35,3 +35,16 @@ export const getUserDetailInfo = (id) => {
     url: `/sys/user/${id}`,
   })
 }
+
+/**
+ * 修改员工基本信息
+ * @param {Object} data 需要更新的员工信息
+ * @returns promise
+ */
+export const updateUserDetailInfo = (data) => {
+  return request({
+    method: 'PUT',
+    url: `/sys/user/${data.id}`,
+    data,
+  })
+}

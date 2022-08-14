@@ -61,3 +61,28 @@ export const importEmployees = (data) => {
     data,
   })
 }
+
+/**
+ * 获取员工个人信息
+ * @param {Number} id 员工信息id
+ * @returns promise
+ */
+export const getEmployeesInfo = (id) => {
+  return request({
+    method: 'GET',
+    url: `/employees/${id}/personalInfo`,
+  })
+}
+
+/**
+ * 修改员工个人信息
+ * @param {Object} data 员工信息formData
+ * @returns promise
+ */
+export const updateEmployeesInfo = (data) => {
+  return request({
+    method: 'PUT',
+    url: `/employees/${data.userId}/personalInfo`,
+    data,
+  })
+}
