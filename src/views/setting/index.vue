@@ -13,7 +13,9 @@
             <el-table-column prop="description" label="描述"> </el-table-column>
             <el-table-column label="操作">
               <template slot-scope="{ row }">
-                <el-button size="small" type="success">分配权限</el-button>
+                <el-button size="small" type="success" @click="showRightsDialog"
+                  >分配权限</el-button
+                >
                 <el-button size="small" type="primary">编辑</el-button>
                 <el-button size="small" type="danger" @click="delRole(row)"
                   >删除</el-button
@@ -86,11 +88,38 @@
         <el-button type="primary" @click="addRole">确 定</el-button>
       </span>
     </el-dialog>
+
+    <!-- 角色分配权限 -->
+    <el-dialog
+      title="给角色分配权限"
+      :visible.sync="setRightsDialog"
+      width="50%"
+    >
+      <el-tree
+        :data="permissions"
+        :props="{ label: 'name' }"
+        :default-expand-all="true"
+        :show-checkbox="true"
+        node-key="id"
+        :default-checked-keys="defaultCheckKeys"
+      ></el-tree>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="setRightsDialog = false">取 消</el-button>
+        <el-button type="primary">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getRolesApi, addRoles, delRole, getCompanyInfoApi } from '@/api'
+import {
+  getRolesApi,
+  addRoles,
+  delRole,
+  getCompanyInfoApi,
+  getPrimissionList,
+} from '@/api'
+import { transListToTree } from '@/utils'
 export default {
   data() {
     return {
@@ -114,12 +143,16 @@ export default {
         ],
       },
       companyInfo: {},
+      setRightsDialog: false,
+      permissions: [],
+      defaultCheckKeys: ['1', '1063315016368918528'], // 权限分配选择项
     }
   },
 
   created() {
     this.getRolesList()
     this.getCompanyInfo()
+    this.getPermissions()
   },
 
   methods: {
@@ -172,6 +205,17 @@ export default {
         this.$store.state.user.userInfo.companyId,
       )
       this.companyInfo = res
+    },
+    // 分配权限弹层
+    showRightsDialog() {
+      this.setRightsDialog = true
+    },
+    // 获取权限列表
+    async getPermissions() {
+      const res = await getPrimissionList()
+      const treePermission = transListToTree(res, '0')
+      console.log(treePermission)
+      this.permissions = treePermission
     },
   },
 }

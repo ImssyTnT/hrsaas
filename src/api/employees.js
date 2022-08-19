@@ -86,3 +86,16 @@ export const updateEmployeesInfo = (data) => {
     data,
   })
 }
+
+/**
+ * 给员工分配角色
+ * @param {Objcet} data
+ * @returns promise
+ */
+export const assignRoles = (data) => {
+  return request({
+    method: 'PUT',
+    url: '/sys/user/assignRoles',
+    data,
+  })
+}
