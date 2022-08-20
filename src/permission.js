@@ -9,8 +9,12 @@ router.beforeEach(async (to, from, next) => {
   if (token) {
     // 发起获取用户信息请求
     if (!store.state.user.userInfo.userId) {
-      // 获取用户信息
-      await store.dispatch('user/getUserInfo')
+      // 获取用户信息 roles获取用户路由权限
+      const { roles } = await store.dispatch('user/getUserInfo')
+      // 筛选动态路由在分离在vuex中,将数据传向vuex
+      // actions中的函数是异步的所以需要await等待
+      await store.dispatch('permission/filterRoutes', roles)
+      next(to.path)
     }
 
     // 1.登录

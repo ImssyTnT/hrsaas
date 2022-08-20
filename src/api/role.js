@@ -37,3 +37,28 @@ export const delRole = (id) => {
     url: `/sys/role/${id}`,
   })
 }
+
+/**
+ * 根据id获取角色详情
+ * @param {Number} id 角色id
+ * @returns promise
+ */
+export const getRolesInfo = (id) => {
+  return request({
+    method: 'GET',
+    url: `/sys/role/${id}`,
+  })
+}
+
+/**
+ * 给角色分配的权限
+ * @param {*} data { id , permIDs }
+ * @returns promise
+ */
+export const assignPerm = (data) => {
+  return request({
+    method: 'PUT',
+    url: '/sys/role/assignPrem',
+    data,
+  })
+}

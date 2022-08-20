@@ -13,11 +13,14 @@
             <el-table-column prop="description" label="描述"> </el-table-column>
             <el-table-column label="操作">
               <template slot-scope="{ row }">
-                <el-button size="small" type="success" @click="showRightsDialog"
+                <el-button
+                  size="small"
+                  type="success"
+                  @click="showRightsDialog(row.id)"
                   >分配权限</el-button
                 >
                 <el-button size="small" type="primary">编辑</el-button>
-                <el-button size="small" type="danger" @click="delRole(row)"
+                <el-button size="small" type="danger" @click="delRole(row.id)"
                   >删除</el-button
                 >
               </template>
@@ -94,6 +97,8 @@
       title="给角色分配权限"
       :visible.sync="setRightsDialog"
       width="50%"
+      @close="setRightsClose"
+      destroy-on-close
     >
       <el-tree
         :data="permissions"
@@ -102,10 +107,11 @@
         :show-checkbox="true"
         node-key="id"
         :default-checked-keys="defaultCheckKeys"
+        ref="perTree"
       ></el-tree>
       <span slot="footer" class="dialog-footer">
         <el-button @click="setRightsDialog = false">取 消</el-button>
-        <el-button type="primary">确 定</el-button>
+        <el-button type="primary" @click="onSaveRights">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -118,6 +124,8 @@ import {
   delRole,
   getCompanyInfoApi,
   getPrimissionList,
+  getRolesInfo,
+  assignPerm,
 } from '@/api'
 import { transListToTree } from '@/utils'
 export default {
@@ -145,7 +153,8 @@ export default {
       companyInfo: {},
       setRightsDialog: false,
       permissions: [],
-      defaultCheckKeys: ['1', '1063315016368918528'], // 权限分配选择项
+      defaultCheckKeys: [], // 权限分配选择项
+      roleId: '',
     }
   },
 
@@ -207,15 +216,30 @@ export default {
       this.companyInfo = res
     },
     // 分配权限弹层
-    showRightsDialog() {
+    async showRightsDialog(id) {
+      this.roleId = id
       this.setRightsDialog = true
+      const res = await getRolesInfo(id)
+      this.defaultCheckKeys = res.permIds
     },
     // 获取权限列表
     async getPermissions() {
       const res = await getPrimissionList()
       const treePermission = transListToTree(res, '0')
-      console.log(treePermission)
       this.permissions = treePermission
+    },
+    // 分配权限弹层关闭事件
+    setRightsClose() {
+      this.defaultCheckKeys = []
+    },
+    // 点击确定提交分配的权限
+    async onSaveRights() {
+      await assignPerm({
+        id: this.roleId,
+        permIds: this.$refs.perTree.getCheckedKeys(),
+      })
+      this.$message.success('分配成功')
+      this.setRightsDialog = false
     },
   },
 }

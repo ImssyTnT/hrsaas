@@ -47,6 +47,7 @@ import { mapGetters, createNamespacedHelpers } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 
+
 const { mapState: mapUserState } = createNamespacedHelpers('user')
 
 export default {

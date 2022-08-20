@@ -1,5 +1,6 @@
 import { login, getUserInfoApi, getUserDetailInfo } from '@/api'
 import { setTokenTime } from '@/utils/auth'
+import { resetRouter } from '@/router'
 
 export default {
   namespaced: true,
@@ -27,11 +28,16 @@ export default {
       const userBaseInfo = await getUserInfoApi()
       const userDetailInfo = await getUserDetailInfo(userBaseInfo.userId)
       context.commit('setUserInfo', { ...userBaseInfo, ...userDetailInfo })
+
+      // actions内部可以通过return将数据传递出去,类似then中的return
+      return userBaseInfo
     },
     // 退出登录
     logout(context) {
       context.commit('setToken', '')
       context.commit('setUserInfo', {})
+      resetRouter()
+      context.commit('permission/setRoutes', [], { root: true })
     },
   },
 }

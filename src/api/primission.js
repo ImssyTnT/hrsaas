@@ -10,3 +10,11 @@ export const getPrimissionList = () => {
     url: '/sys/permission',
   })
 }
+
+export const addPermission = (data) => {
+  return request({
+    method: 'POST',
+    url: 'sys/permission',
+    data,
+  })
+}
