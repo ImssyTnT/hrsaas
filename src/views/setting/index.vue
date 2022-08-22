@@ -3,7 +3,10 @@
     <div class="app-container">
       <el-tabs v-model="activeName">
         <el-tab-pane label="角色管理" name="first">
-          <el-button type="primary" @click="dialogVisible = true"
+          <el-button
+            type="primary"
+            @click="dialogVisible = true"
+            v-if="isHas(point.roles.add)"
             >新增角色</el-button
           >
           <!-- 表格 -->
@@ -127,8 +130,13 @@ import {
   getRolesInfo,
   assignPerm,
 } from '@/api'
+
+import maxinPermission from '@/mixins/permission'
+
 import { transListToTree } from '@/utils'
 export default {
+  // 混入mixins
+  mixins: [maxinPermission],
   data() {
     return {
       activeName: 'first',

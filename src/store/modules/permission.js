@@ -4,10 +4,14 @@ export default {
   namespaced: true,
   state: {
     routes: [], // 自己维护的路由规则( 静态路由 + 筛选后的动态路由 )
+    points: [], // 员工按钮权限
   },
   mutations: {
     setRoutes(state, routes) {
       state.routes = [...constantRoutes, ...routes]
+    },
+    setPoints(state, points) {
+      state.points = points
     },
   },
   actions: {
@@ -18,6 +22,8 @@ export default {
       })
       // 将路由储存在vuex中
       context.commit('setRoutes', routes)
+      // 将员工按钮权限储存在vuex中
+      context.commit('setPoints', roles.points)
       // 添加动态路由
       router.addRoutes([
         ...routes,

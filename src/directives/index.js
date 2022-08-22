@@ -19,3 +19,17 @@ export const imgError = {
     }
   },
 }
+
+import store from '@/store'
+
+export const isHas = {
+  // bind:指令和dom绑定
+  // inserted:绑定的元素插入到父节点
+  // update:指令所绑定的Vnode
+  inserted(el, binding) {
+    const has = store.state.permission.points.includes(binding.value)
+    if (!has) {
+      el.remove()
+    }
+  },
+}
