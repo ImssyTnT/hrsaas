@@ -1,9 +1,19 @@
-import PageTools from './PageTools'
-import UploadExcel from './UploadExcel'
-import UploadImg from './UploadImg'
-
-// 注册components文件夹中所有的组件并导出
-const components = [PageTools, UploadExcel, UploadImg]
+import PageTools from '@/components/PageTools'
+import MyTest from '@/components/MyTest'
+import UploadExcel from '@/components/UploadExcel'
+import UploadImg from '@/components/UploadImg'
+import Calendar from '@/components/Calendar'
+import FullScreen from '@/components/FullScreen'
+import ToggleLang from './ToggleLang'
+const components = [
+  PageTools,
+  MyTest,
+  UploadExcel,
+  UploadImg,
+  Calendar,
+  FullScreen,
+  ToggleLang,
+]
 export default {
   install(Vue) {
     components.forEach((component) => {

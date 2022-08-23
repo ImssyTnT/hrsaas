@@ -1,28 +1,28 @@
 <template>
-  <el-dialog
-    title="角色分配"
-    @open="onOpen"
-    @close="onClose"
-    :visible="visible"
-  >
+  <el-dialog @open="onOpen" @close="close" title="分配角色" :visible="visible">
     <el-checkbox-group v-model="checkList">
-      <el-checkbox v-for="item in roles" :key="item.id" :label="item.id">{{
-        item.name
-      }}</el-checkbox>
+      <!-- label: 渲染 name -->
+      <!-- 会记录选中值 id -->
+      <el-checkbox v-for="item in roles" :key="item.id" :label="item.id">
+        <!-- 插槽也可以用于渲染 -->
+        {{ item.name }}
+      </el-checkbox>
     </el-checkbox-group>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="onClose">取 消</el-button>
+      <el-button @click="close">取 消</el-button>
       <el-button type="primary" @click="assignRole">确 定</el-button>
     </span>
   </el-dialog>
 </template>
 
 <script>
-import { getRolesApi, getUserDetailInfo, assignRoles } from '@/api'
+import { getRolesApi } from '@/api/role'
+import { getUserDetail } from '@/api/user'
+import { assignRoles } from '@/api/employees'
 export default {
   data() {
     return {
-      checkList: [],
+      checkList: [], // 记录选中的角色
       roles: [],
     }
   },
@@ -32,7 +32,7 @@ export default {
       type: Boolean,
       required: true,
     },
-    userId: {
+    employeesId: {
       type: String,
       required: true,
     },
@@ -41,11 +41,9 @@ export default {
   created() {},
 
   methods: {
-    // 关闭弹层事件
-    onClose() {
+    close() {
       this.$emit('update:visible', false)
     },
-
     // 获取角色列表
     async getRolesList() {
       const { rows } = await getRolesApi()
@@ -58,19 +56,22 @@ export default {
     },
     // 获取员工角色
     async getEmployeesRoles() {
-      const { roleIds } = await getUserDetailInfo(this.userId)
+      // console.log()
+      const { roleIds } = await getUserDetail(this.employeesId)
       this.checkList = roleIds
     },
     // 分配角色
     async assignRole() {
       if (!this.checkList.length) return this.$message.error('请选择角色')
-      console.log(this.checkList)
-      await assignRoles({ id: this.userId, roleIds: this.checkList })
+      await assignRoles({
+        id: this.employeesId,
+        roleIds: this.checkList,
+      })
       this.$message.success('分配成功')
-      this.onClose()
+      this.close()
     },
   },
 }
 </script>
 
-<style scoped></style>
+<style scoped lang="less"></style>

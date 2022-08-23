@@ -1,101 +1,87 @@
 import request from '@/utils/request'
 
 /**
- * 获取员工简单列表
+ * 获取员工列表(简单)
  * @returns promise
  */
-export const getEmployeesApi = () => {
+export function getEmployeesApi() {
   return request({
-    method: 'GET',
     url: '/sys/user/simple',
   })
 }
 
 /**
  * 获取员工列表
- * @param {Object} params
- * @returns promise
+ * @param {*} params {page, size}
+ * @returns
  */
-export const getEmployeesInfoApi = (params) => {
+export function getEmployeesInfoApi(params) {
   return request({
-    method: 'GET',
     url: '/sys/user',
     params,
   })
 }
 
 /**
- * 删除员工
- * @param {Number} id 员工id
- * @returns
- */
-export function delEmployeeApi(id) {
+ * 删除员工接口
+ * ****/
+
+export function delEmployee(id) {
   return request({
-    method: 'DELETE',
     url: `/sys/user/${id}`,
+    method: 'delete',
   })
 }
 
-/**
- * 新增员工
- * @param {Object} data 新增员工所需要的信息
- * @returns
- */
-export const addEmployees = (data) => {
+/** **
+ *  新增员工的接口
+ * **/
+export function addEmployee(data) {
   return request({
-    method: 'POST',
+    method: 'post',
     url: '/sys/user',
     data,
   })
 }
-
 /**
- * 批量导入员工信息
- * @param {Array} data 员工信息数组
- * @returns promise
+ * 批量导入员工
+ * @param {*} data 员工数组
  */
-export const importEmployees = (data) => {
+export function importEmployees(data) {
   return request({
-    method: 'POST',
+    method: 'post',
     url: '/sys/user/batch',
     data,
   })
 }
 
-/**
- * 获取员工个人信息
- * @param {Number} id 员工信息id
- * @returns promise
- */
-export const getEmployeesInfo = (id) => {
+/** *
+ *  读取用户详情的基础信息
+ * **/
+export function getPersonalDetail(id) {
   return request({
-    method: 'GET',
     url: `/employees/${id}/personalInfo`,
   })
 }
 
-/**
- * 修改员工个人信息
- * @param {Object} data 员工信息formData
- * @returns promise
- */
-export const updateEmployeesInfo = (data) => {
+/** *
+ *  更新用户详情的基础信息
+ * **/
+export function updatePersonal(data) {
   return request({
-    method: 'PUT',
     url: `/employees/${data.userId}/personalInfo`,
+    method: 'put',
     data,
   })
 }
 
-/**
- * 给员工分配角色
- * @param {Objcet} data
- * @returns promise
- */
-export const assignRoles = (data) => {
+/** *
+ * 给用户分配角色
+ * ***/
+export function assignRoles(data) {
   return request({
-    method: 'PUT',
     url: '/sys/user/assignRoles',
     data,
+    method: 'put',
   })
 }

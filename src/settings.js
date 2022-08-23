@@ -1,5 +1,5 @@
 module.exports = {
-  title: '启恩电子HR后台管理系统',
+  title: 'hrsaas',
 
   /**
    * @type {boolean} true | false
@@ -11,5 +11,5 @@ module.exports = {
    * @type {boolean} true | false
    * @description Whether show the logo in sidebar
    */
-  sidebarLogo: true
+  sidebarLogo: true,
 }

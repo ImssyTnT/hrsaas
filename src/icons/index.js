@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import SvgIcon from '@/components/SvgIcon' // svg component
 
-// 全局注册 svg-icon 组件
+// 注册全局组件 svg-icon
 Vue.component('svg-icon', SvgIcon)
 
-// 加载 /svg 目录下左右 .svg 后缀名的文件
+// 一次性加载所有的/svg目录下的所有svg文件
 const req = require.context('./svg', false, /\.svg$/)
 const requireAll = (requireContext) => requireContext.keys().map(requireContext)
 requireAll(req)

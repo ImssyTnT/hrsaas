@@ -1,14 +1,12 @@
 <template>
   <el-card class="box-card">
     <el-row type="flex">
-      <!-- 左边 -->
       <el-col>
         <el-tag v-if="isShowLeft">
           <i :class="leftIcon"></i>
-          <slot name="left" />
+          <slot name="left-tag" />
         </el-tag>
       </el-col>
-      <!-- 右边 -->
       <el-col>
         <el-row type="flex" justify="end">
           <slot name="right" />
@@ -20,14 +18,10 @@
 
 <script>
 export default {
-  name: 'page-tools',
+  name: 'PageTools',
   data() {
     return {}
   },
-
-  created() {},
-
-  methods: {},
 
   props: {
     leftIcon: {
@@ -39,11 +33,15 @@ export default {
       default: true,
     },
   },
+
+  created() {},
+
+  methods: {},
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .box-card {
-  margin: 20px 0;
+  margin: 10px 0;
 }
 </style>

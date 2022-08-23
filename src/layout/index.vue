@@ -9,19 +9,21 @@
     <sidebar class="sidebar-container" />
     <!-- 主体内容 -->
     <div class="main-container">
-      <!-- 头部导航 -->
+      <!-- 头部 -->
       <div :class="{ 'fixed-header': fixedHeader }">
-        <!-- 头部导航组件 -->
+        <!-- 头部navbar组件 -->
         <navbar />
+        <!-- 页签 -->
+        <TagsView />
       </div>
-      <!-- 子级路由占位 主体内容组件 -->
+      <!-- 肯定是子路由占位 -->
       <app-main />
     </div>
   </div>
 </template>
 
 <script>
-import { Navbar, Sidebar, AppMain } from './components'
+import { Navbar, Sidebar, AppMain, TagsView } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 
 export default {
@@ -30,6 +32,7 @@ export default {
     Navbar,
     Sidebar,
     AppMain,
+    TagsView,
   },
   mixins: [ResizeMixin],
   computed: {

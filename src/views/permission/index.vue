@@ -2,36 +2,38 @@
   <div class="dashboard-container">
     <div class="app-container">
       <page-tools :isShowLeft="false">
-        <template #right>
-          <el-button type="primary" @click="showAddDialog('0', 1)"
-            >添加权限</el-button
-          >
+        <template slot="right">
+          <el-button @click="showAddDialog('0', 1)">添加权限</el-button>
         </template>
       </page-tools>
 
       <el-table
+        ref="table"
+        row-key="id"
         :data="permissions"
         style="width: 100%"
-        fit
-        row-key="id"
-        ref="tabel"
       >
-        <el-table-column prop="name" label="名称" width="180">
-          <template slot-scope="{ row }">
+        <el-table-column label="名称" width="180">
+          <template v-slot="{ row }">
             <i
               v-if="row.children"
+              style="margin-right: 5px"
               class="el-icon-folder-opened"
               @click="expend(row)"
             ></i>
-            <i v-if="row.type === 2" class="el-icon-folder"></i>
-            {{ row.name }}
+            <!-- <i
+              v-if="row.type === 2"
+              class="el-icon-folder"
+              style="margin-right: 5px"
+            ></i> -->
+            <span>{{ row.name }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="code" label="标识" width="180">
         </el-table-column>
         <el-table-column prop="description" label="描述"> </el-table-column>
         <el-table-column label="操作">
-          <template slot-scope="{ row }">
+          <template v-slot="{ row }">
             <el-button type="text" @click="showAddDialog(row.id, 2)"
               >添加</el-button
             >
@@ -43,14 +45,9 @@
     </div>
 
     <!-- 放置一个弹层 用来编辑新增节点 -->
-    <el-dialog title="新增权限点" :visible.sync="showDialog" @close="btnCancel">
+    <el-dialog title="添加权限点" :visible.sync="showDialog">
       <!-- 表单 -->
-      <el-form
-        ref="perForm"
-        :model="formData"
-        :rules="rules"
-        label-width="120px"
-      >
+      <el-form ref="form" :model="formData" :rules="rules" label-width="120px">
         <el-form-item label="权限名称" prop="name">
           <el-input v-model="formData.name" style="width: 90%" />
         </el-form-item>
@@ -70,8 +67,10 @@
       </el-form>
       <el-row slot="footer" type="flex" justify="center">
         <el-col :span="6">
-          <el-button size="small" type="primary" @click="btnOK">确定</el-button>
-          <el-button size="small" @click="btnCancel">取消</el-button>
+          <el-button size="small" type="primary" @click="onSave"
+            >确定</el-button
+          >
+          <el-button size="small">取消</el-button>
         </el-col>
       </el-row>
     </el-dialog>
@@ -79,13 +78,12 @@
 </template>
 
 <script>
-import { getPrimissionList, addPermission } from '@/api'
+import { getPermissionList, addPermission } from '@/api/permission'
 import { transListToTree } from '@/utils'
 export default {
   data() {
     return {
       permissions: [],
-      showDialog: false,
       formData: {
         name: '', // 名称
         code: '', // 标识
@@ -102,46 +100,36 @@ export default {
           { required: true, message: '权限标识不能为空', trigger: 'blur' },
         ],
       },
+      showDialog: false,
     }
   },
 
   created() {
-    this.getPrimissions()
+    this.getPermissions()
   },
 
   methods: {
-    // 获取权限列表
-    async getPrimissions() {
-      const res = await getPrimissionList()
-      console.log(res)
+    async getPermissions() {
+      const res = await getPermissionList()
       this.permissions = transListToTree(res, '0')
     },
-    // 表格展开
     expend(row) {
-      row.isExpend = !row.isExpend
-      this.$refs.tabel.toggleRowExpansion(row, row.isExpend)
+      // console.log('点击展开', row)
+      row.isExpand = !row.isExpand
+      this.$refs.table.toggleRowExpansion(row, row.isExpand)
     },
-    // 添加权限弹层
     showAddDialog(id, type) {
       this.showDialog = true
       this.formData.pid = id
       this.formData.type = type
     },
-    // 关闭弹层
-    btnCancel() {
-      this.showDialog = false
-      this.$refs.perForm.resetFields()
-      this.formData.description = ''
-    },
-    // 点击确定发送请求
-    btnOK() {
-      this.$refs.perForm.validate(async (valid) => {
+    onSave() {
+      this.$refs.form.validate(async (valid) => {
         if (!valid) return
-        console.log(this.formData)
         await addPermission(this.formData)
-        this.$message.success('添加成功'),
-          this.getPrimissions(),
-          this.btnCancel()
+        this.$message.success('添加成功')
+        this.showDialog = false
+        this.getPermissions()
       })
     },
   },

@@ -34,8 +34,8 @@ export default {
   computed: {
     ...mapGetters(['sidebar']),
     routes() {
-      // 可以获取到所有路由规则(动态添加的无法获取)
-      // 自己维护一个路由规则(所有路由 包含动态路由)
+      // 可以获取到所有路由规则(动态添加的)
+      //  我们自己去维护一个路由规则(所有路由)
       return this.$store.state.permission.routes
     },
     activeMenu() {

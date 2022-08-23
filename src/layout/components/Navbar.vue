@@ -8,31 +8,26 @@
 
     <!-- <breadcrumb class="breadcrumb-container" /> -->
     <div class="app-breadcrumb">
-      {{ userInfo.companyName }}
+      {{ $store.state.user.userInfo.companyName }}
       <span class="breadBtn">体验版</span>
     </div>
-
     <div class="right-menu">
+      <ToggleLang />
+      <FullScreen :style="{ margin: '0 10px' }" />
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img
-            :src="userInfo.staffPhoto"
+            :src="$store.getters.avatar"
             class="user-avatar"
-            v-imgError="require('@/assets/common/head.jpg')"
+            v-imgError="defaultImg"
           />
-          <span>{{ userInfo.username }}</span>
+          <span>{{ $store.state.user.userInfo.username }}</span>
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
             <el-dropdown-item> Home </el-dropdown-item>
           </router-link>
-          <a
-            target="_blank"
-            href="https://github.com/PanJiaChen/vue-admin-template/"
-          >
-            <el-dropdown-item>Github</el-dropdown-item>
-          </a>
           <el-dropdown-item divided @click.native="logout">
             <span style="display: block">Log Out</span>
           </el-dropdown-item>
@@ -43,16 +38,17 @@
 </template>
 
 <script>
-import { mapGetters, createNamespacedHelpers } from 'vuex'
+import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-
-
-const { mapState: mapUserState } = createNamespacedHelpers('user')
+import defaultImg from '@/assets/common/head.jpg'
 
 export default {
+  // 如果想在data中定义本地图片路径,需要先引入
   data() {
-    return {}
+    return {
+      defaultImg,
+    }
   },
   components: {
     Breadcrumb,
@@ -60,7 +56,6 @@ export default {
   },
   computed: {
     ...mapGetters(['sidebar', 'avatar']),
-    ...mapUserState(['userInfo']),
   },
   methods: {
     toggleSideBar() {
@@ -79,9 +74,8 @@ export default {
   height: 50px;
   overflow: hidden;
   position: relative;
-  background: #fff;
-  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
   background-image: -webkit-linear-gradient(left, #3d6df8, #5b8cff);
+  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
 
   .app-breadcrumb {
     display: inline-block;
@@ -122,6 +116,7 @@ export default {
   }
 
   .right-menu {
+    display: flex;
     float: right;
     height: 100%;
     line-height: 50px;
@@ -152,7 +147,6 @@ export default {
       margin-right: 30px;
 
       .avatar-wrapper {
-        // margin-top: 5px;
         position: relative;
         display: flex;
         align-items: center;
@@ -160,7 +154,7 @@ export default {
         cursor: pointer;
 
         span {
-          margin: 0 5px;
+          margin: 0 3px;
         }
 
         .user-avatar {
@@ -174,7 +168,6 @@ export default {
           cursor: pointer;
           position: absolute;
           right: -20px;
-          // top: 25px;
           font-size: 12px;
         }
       }
